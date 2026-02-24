@@ -1,0 +1,44 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy static site
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1 — Get the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2 — Make sure index.html actually exists before deploying
+      - name: Validate HTML exists
+        run: |
+          if [ ! -f app/index.html ]; then
+            echo "ERROR: index.html not found"
+            exit 1
+          fi
+          echo "✅ index.html found"
+
+      # Step 3 — Copy files to EC2
+      - name: Deploy to EC2
+        env:
+          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          HOST: ${{ secrets.EC2_HOST }}
+          USER: ${{ secrets.EC2_USER }}
+        run: |
+          # Write private key to temp file
+          echo "$SSH_KEY" > private_key.pem
+          chmod 600 private_key.pem
+
+          # Copy all files from app/ to nginx web root
+          scp -o StrictHostKeyChecking=no -i private_key.pem -r app/* $USER@$HOST:/var/www/html/
+
+          # Remove key immediately after use
+          rm -f private_key.pem
+
+          echo "✅ Deployment complete - site is live"
