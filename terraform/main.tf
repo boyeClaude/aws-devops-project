@@ -85,7 +85,7 @@ resource "aws_instance" "devops_server" {
   vpc_security_group_ids = [aws_security_group.devops_sg.id]
 
   tags = {
-    Name    = "devops-project-server"
+    Name    = "devops-project-server-tf"
     Project = "aws-devops-project"
   }
 }
