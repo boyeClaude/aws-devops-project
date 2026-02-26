@@ -84,6 +84,8 @@ resource "aws_instance" "devops_server" {
   key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.devops_sg.id]
 
+  user_data = file("${path.module}/scripts/setup.sh")
+
   tags = {
     Name    = "devops-project-server-tf"
     Project = "aws-devops-project"
