@@ -1,0 +1,10 @@
+---
+- name: Configure DevOps server
+  hosts: devops_server
+  become: true
+
+  roles:
+    - nginx
+    - node_exporter
+    - prometheus
+    - grafana
