@@ -91,3 +91,27 @@ resource "aws_instance" "devops_server" {
     Project = "aws-devops-project"
   }
 }
+
+# ─── Auto-generate Ansible inventory with correct IP ─────────────────────────
+
+resource "local_file" "ansible_inventory" {
+  content = <<EOF
+[devops_server]
+${aws_instance.devops_server.public_ip} ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/devops-project-key.pem
+
+[devops_server:vars]
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+EOF
+  filename = "../ansible/inventory.ini"
+}
+
+
+/*What this does — every time `terraform apply` runs and creates a new EC2, Terraform automatically writes the new IP into `ansible/inventory.ini`. So the flow becomes:
+
+terraform apply 
+      ↓
+EC2 created with new IP
+      ↓
+inventory.ini updated automatically with that IP
+      ↓
+ansible-playbook playbook.yml  ← always points to the right server */

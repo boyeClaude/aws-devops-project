@@ -1,0 +1,41 @@
+---
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Enable and start Nginx
+  systemd:
+    name: nginx
+    enabled: yes
+    state: started
+
+- name: Set ownership of web root
+  file:
+    path: /var/www/html
+    owner: ubuntu
+    group: ubuntu
+    recurse: yes
+
+- name: Set permissions of web root
+  file:
+    path: /var/www/html
+    mode: "0755"
+    recurse: yes
+
+- name: Deploy default index page
+  copy:
+    dest: /var/www/html/index.html
+    content: |
+      <!DOCTYPE html>
+      <html>
+        <head><title>DevOps Project</title></head>
+        <body>
+          <h1>Server is up!</h1>
+          <p>Deployed via Terraform + Ansible.</p>
+        </body>
+      </html>
+    owner: ubuntu
+    group: ubuntu
+    mode: "0644"
