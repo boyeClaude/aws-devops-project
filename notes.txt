@@ -1,2 +1,2 @@
 connect to the server 
-ssh -i ~/.ssh/devops-project-key.pem ubuntu@54.160.42.204
+ssh -i ~/.ssh/devops-project-key.pem ubuntu@54.160.42.204. 
