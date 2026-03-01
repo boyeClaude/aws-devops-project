@@ -1,6 +1,11 @@
 connect to the server 
 ssh -i ~/.ssh/devops-project-key.pem ubuntu@54.160.42.204
 
+launch terraform
+ - terraform init
+ - terraform plan
+ - terraform apply
+
 
 destroy the EC2 to avoid costs
 cd ../terraform
