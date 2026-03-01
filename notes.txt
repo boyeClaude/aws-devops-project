@@ -1,2 +1,22 @@
 connect to the server 
 ssh -i ~/.ssh/devops-project-key.pem ubuntu@54.160.42.204
+
+
+destroy the EC2 to avoid costs
+cd ../terraform
+terraform destroy
+
+install software via ansible
+cd ansible
+first test if ansible communicate properly with the server by running this command:
+ansible all -i inventory.ini -m ping
+
+if sucess then run the command to execute the playbook:
+ansible-playbook -i inventory.ini playbook.yml
+
+
+Now verify everything is accessible in the browser:
+
+Website: your_new_ip
+Prometheus: your_new_ip:9090
+Grafana: your_new_ip:3000
